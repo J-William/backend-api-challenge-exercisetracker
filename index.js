@@ -41,6 +41,34 @@ app.get('/api/users', (req, res) => {
 		})
 })
 
+// Post an exercise for a user
+app.post('/api/users/:_id/exercises', (req, res) => {
+	let date;
+	if (req.body.date) {
+		date = new Date(req.body.date);
+	} else {
+		date = new Date();
+	}
+
+	dao.logExercise(
+		req.params._id,
+		req.body.description,
+		req.body.duration,
+		date.toDateString()
+	)
+	.then((userName) => {
+		res.json({
+			username: userName,
+			description: req.body.description,
+			duration: req.body.duration,
+			date: date.toDateString(),
+			_id: req.params._id
+		})
+	})
+	.catch((error) => {
+		console.error(`logExercise invoke failed: ${error}`)
+	})
+})
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
