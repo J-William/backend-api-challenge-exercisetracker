@@ -56,18 +56,18 @@ app.post('/api/users/:_id/exercises', (req, res) => {
 		req.body.duration,
 		date.toDateString()
 	)
-	.then((userName) => {
-		res.json({
-			username: userName,
-			description: req.body.description,
-			duration: req.body.duration,
-			date: date.toDateString(),
-			_id: req.params._id
+		.then((userName) => {
+			res.json({
+				username: userName,
+				description: req.body.description,
+				duration: req.body.duration,
+				date: date.toDateString(),
+				_id: req.params._id
+			})
 		})
-	})
-	.catch((error) => {
-		console.error(`logExercise invoke failed: ${error}`)
-	})
+		.catch((error) => {
+			console.error(`logExercise invoke failed: ${error}`)
+		})
 })
 
 

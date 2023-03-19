@@ -47,7 +47,7 @@ class UserDao {
 	async logExercise(id, description, duration, date) {
 		try {
 			const oid = new ObjectId(id)
-			const result = await this._coll.updateOne(
+			const result = await this._coll.findOneAndUpdate(
 				{ _id: oid },
 				{
 					$push: {
@@ -58,16 +58,10 @@ class UserDao {
 						}
 					}
 				},
-				{upsert:true}
+				{ upsert: true }
 			)
 
-			// this._coll.findOne(
-			// 	{ _id: oid },
-			// 	{ username: 1 }
-			// )
-			// .then((res) => {
-			// 	return res.username;
-			// })
+			return result.value.username;
 
 		} catch (error) {
 			console.error(`logExercise error: ${error}`)
