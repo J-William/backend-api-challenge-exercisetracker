@@ -2,6 +2,25 @@
 
 A freecodecamp backend api challenge project
 
+POST
+/api/users
+{ username: $new_username }
+Returns { _id: $id, username: $username}
+
+GET
+/api/users
+Returns a list of use objects {_id: $id, username: $username}
+
+POST
+/api/users/:_id/exercises
+{ description: $description, duration: $duration, date: $date }
+Returns the user object with exercise fields added
+
+GET
+/api/users/:_id/logs/?from=$from&to=$to&limit=$limit
+Returns a full exercise log for a user
+
+
 Requirements
 - You can POST to /api/users with form data username to create a new user.
 - The returned response from POST /api/users with form data username will be an object with username and _id properties.
