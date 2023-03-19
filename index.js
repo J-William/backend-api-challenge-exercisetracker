@@ -71,7 +71,13 @@ app.post('/api/users/:_id/exercises', (req, res) => {
 })
 
 app.get('/api/users/:_id/logs', (req, res) => {
-	dao.getLogs(req.params._id)
+	
+	dao.getLogs(
+		req.params._id,
+		req.query.from,
+		req.query.to,
+		req.query.limit
+	)
 	.then((user) => {
 		res.json(user)
 	})

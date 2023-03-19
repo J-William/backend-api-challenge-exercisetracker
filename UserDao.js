@@ -54,7 +54,7 @@ class UserDao {
 						log: {
 							'description': description,
 							'duration': duration,
-							'date': date
+							'date': new Date(date)
 						}
 					},
 					$inc: { count: 1 }
@@ -69,12 +69,30 @@ class UserDao {
 		}
 	}
 
-	async getLogs(id) {
+	async getLogs(id, from = new Date('1970-01-01'), to = new Date(), limit = 100) {
 		try {
+			console.log(`getLogs parameters: ${from}, ${to}, ${limit}`);
 			const oid = new ObjectId(id)
-			return await this._coll.findOne(
-				{ _id: oid }
-			)			
+			const result = await this._coll.aggregate([
+				{ $match: { _id: oid } },
+				{
+					$project: {
+						log: {
+							$filter: {
+								input: "$log",
+								as: "log",
+								cond: {
+									$and: [
+										{ $gte: ["$$log.date", new Date(from)] },
+										{ $lte: ["$$log.date", new Date(to)] }
+									]
+								}
+							}
+						}
+					}
+				}]).limit(1).toArray()
+
+			return result[0];
 		} catch (error) {
 			console.error(`getLogs error: ${error}`)
 		}
