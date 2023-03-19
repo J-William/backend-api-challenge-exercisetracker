@@ -56,7 +56,8 @@ class UserDao {
 							'duration': duration,
 							'date': date
 						}
-					}
+					},
+					$inc: { count: 1 }
 				},
 				{ upsert: true }
 			)
@@ -65,6 +66,17 @@ class UserDao {
 
 		} catch (error) {
 			console.error(`logExercise error: ${error}`)
+		}
+	}
+
+	async getLogs(id) {
+		try {
+			const oid = new ObjectId(id)
+			return await this._coll.findOne(
+				{ _id: oid }
+			)			
+		} catch (error) {
+			console.error(`getLogs error: ${error}`)
 		}
 	}
 }

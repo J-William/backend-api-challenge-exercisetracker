@@ -56,20 +56,29 @@ app.post('/api/users/:_id/exercises', (req, res) => {
 		req.body.duration,
 		date.toDateString()
 	)
-		.then((userName) => {
-			res.json({
-				username: userName,
-				description: req.body.description,
-				duration: req.body.duration,
-				date: date.toDateString(),
-				_id: req.params._id
-			})
+	.then((userName) => {
+		res.json({
+			username: userName,
+			description: req.body.description,
+			duration: req.body.duration,
+			date: date.toDateString(),
+			_id: req.params._id
 		})
-		.catch((error) => {
-			console.error(`logExercise invoke failed: ${error}`)
-		})
+	})
+	.catch((err) => {
+		console.error(`logExercise invoke failed: ${err}`)
+	})
 })
 
+app.get('/api/users/:_id/logs', (req, res) => {
+	dao.getLogs(req.params._id)
+	.then((user) => {
+		res.json(user)
+	})
+	.catch((err) => {
+		console.error(`getLogs invoke failed: ${err}`)
+	} )
+})
 
 const listener = app.listen(process.env.PORT || 3000, () => {
 	console.log('Your app is listening on port ' + listener.address().port)
