@@ -1,5 +1,4 @@
 
-
 class UserDao {
 	constructor(client) {
 		this._client = client;
@@ -23,6 +22,24 @@ class UserDao {
 			return result.insertedId.toString();
 		} catch (error) {
 			console.error(`createUser error: ${error}`)
+		}
+	}
+
+	async getUsers() {
+		try {
+			let users = []
+			const cursor = await this._coll.find(
+				{},
+				{username: 1}
+			)
+			while (await cursor.hasNext()) {
+				users.push(
+					await cursor.next()
+				)
+			}
+			return users;
+		} catch (error) {
+			console.error(`getUsers error: ${error}`)
 		}
 	}
 }

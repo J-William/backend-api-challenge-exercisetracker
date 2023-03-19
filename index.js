@@ -3,7 +3,7 @@ const app = express()
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const { MongoClient } = require("mongodb")
-const UserDao = require('./crudOps.js')
+const UserDao = require('./UserDao.js')
 require('dotenv').config()
 
 const MONGO_URI = process.env['MONGO_URI']
@@ -16,23 +16,33 @@ app.use(express.static('public'))
 
 // Test page
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/views/index.html')
+	res.sendFile(__dirname + '/views/index.html')
 });
 
 // User creation endpoint
 app.post('/api/users', (req, res) => {
 	dao.createUser(req.body.username)
 		.then((newId) => {
-			res.json({_id: newId, username: req.body.username})
+			res.json({ username: req.body.username, _id: newId })
 		})
 		.catch((err) => {
 			console.error(`creatUser invoke failed: ${err}`)
 		})
 })
 
+// Get all users
+app.get('/api/users', (req, res) => {
+	dao.getUsers()
+		.then((users) => {
+			res.send(users)
+		})
+		.catch((err) => {
+			console.error(`getUsers invoke failed: ${err}`)
+		})
+})
 
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
-  console.log('Your app is listening on port ' + listener.address().port)
+	console.log('Your app is listening on port ' + listener.address().port)
 })
