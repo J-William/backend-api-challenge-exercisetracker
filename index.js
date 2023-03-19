@@ -56,34 +56,35 @@ app.post('/api/users/:_id/exercises', (req, res) => {
 		req.body.duration,
 		date.toDateString()
 	)
-	.then((userName) => {
-		res.json({
-			username: userName,
-			description: req.body.description,
-			duration: req.body.duration,
-			date: date.toDateString(),
-			_id: req.params._id
+		.then((userName) => {
+			res.json({
+				username: userName,
+				description: req.body.description,
+				duration: parseInt(req.body.duration),
+				date: date.toDateString(),
+				_id: req.params._id
+			})
 		})
-	})
-	.catch((err) => {
-		console.error(`logExercise invoke failed: ${err}`)
-	})
+		.catch((err) => {
+			console.error(`logExercise invoke failed: ${err}`)
+		})
 })
 
+// Search logs for a user
 app.get('/api/users/:_id/logs', (req, res) => {
-	
+
 	dao.getLogs(
 		req.params._id,
 		req.query.from,
 		req.query.to,
 		req.query.limit
 	)
-	.then((user) => {
-		res.json(user)
-	})
-	.catch((err) => {
-		console.error(`getLogs invoke failed: ${err}`)
-	} )
+		.then((user) => {
+			res.json(user)
+		})
+		.catch((err) => {
+			console.error(`getLogs invoke failed: ${err}`)
+		})
 })
 
 const listener = app.listen(process.env.PORT || 3000, () => {

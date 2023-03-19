@@ -53,7 +53,7 @@ class UserDao {
 					$push: {
 						log: {
 							'description': description,
-							'duration': duration,
+							'duration': parseInt(duration),
 							'date': new Date(date)
 						}
 					},
@@ -73,10 +73,11 @@ class UserDao {
 		try {
 			console.log(`getLogs parameters: ${from}, ${to}, ${limit}`);
 			const oid = new ObjectId(id)
-			const result = await this._coll.aggregate([
+			let result = await this._coll.aggregate([
 				{ $match: { _id: oid } },
 				{
 					$project: {
+						count: 1,
 						log: {
 							$filter: {
 								input: "$log",
@@ -90,9 +91,19 @@ class UserDao {
 							}
 						}
 					}
-				}]).limit(1).toArray()
+				},
+				{ $project: { count: 1, log: { $slice: ["$log", parseInt(limit)] } } }
+			]).limit(1).toArray()
 
-			return result[0];
+			result = result[0]
+			// Convert the dates to display format
+			result.log.map(
+				(entry) => {
+					entry.date = entry.date.toDateString()
+				}
+			)
+			return result;
+
 		} catch (error) {
 			console.error(`getLogs error: ${error}`)
 		}
